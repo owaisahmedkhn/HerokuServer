@@ -4,19 +4,75 @@ import cors from 'cors'
 const app = express()
 
 app.use(express.json())
+var counter = 0;
+let paramBody,key;
+let insertObj = {};
+var testArray = [
+                  
+                  { "key1": "First Value 1 "},
+                  { "key2": "First Value 2" },
+                  {  "key3": "First Value 3"},
+                  { "key4": "First Value 4" }
+                  
+                ]
 
-app.get('/', (req, res) => {
-  res.send("Hello World!, Your Node .mjs Server is running and listening at Port:"+ port)
+app.get('/post/:id', (req, res) => {
+  const postIndex = Number(req.params.id)
+  res.send(testArray[postIndex])
 })
 
-app.get('/water', (req, res) => {
-    res.send("Hello World!, Take the water")
-  })
+app.get('/posts', (req, res) => {
+  res.send(testArray)
+})
 
-app.get('/food', (req, res) => {
-    res.send("Hello World!, here is your food")
-  })
+app.post('/post', (req, res) => {
+  paramBody = req.body;
+  key = "key" + testArray.length
+  insertObj = {
+    key : paramBody
+  }
+  testArray.push(req.body);
+  res.send(req.body)
+})
 
+app.put('/post/:id', (req, res) => {
+  const putIndex = Number(req.params.id)
+
+    if( testArray[putIndex]){
+
+      key = "key" + testArray.length
+      testArray[putIndex][key] = paramBody;
+      res.send("Post updated.")
+
+    }else{
+
+      res.send("Post to be updated could not be found")
+
+    }
+})
+
+/*
+app.delete('/post/:id', (req, res) => {
+  const delIndex = Number(req.params.id)
+  if( testArray[delIndex]){
+
+    paramBody = req.params.body;
+    key = "key" + testArray.length
+
+    insertObj = {
+      key : paramBody
+    }
+
+    testArray[delIndex] = '';
+    res.send("Post deleted")
+
+  }else{
+
+    res.send("Post to be deleted could not be found")
+
+  }
+})
+*/
 
 const port = process.env.PORT || 3000
 
